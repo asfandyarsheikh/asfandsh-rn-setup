@@ -32,7 +32,7 @@ export default RootNavigator;
 async function start() {
     projectDir();
     const {stdout1, stderr1} = await exec(
-        'npm i @tisf/rn-screens',
+        'npm i @tisf/rn-screens --legacy-peer-deps',
     );
     console.log('stdout:', stdout1);
     console.log('stderr:', stderr1);

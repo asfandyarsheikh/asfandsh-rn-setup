@@ -78,8 +78,7 @@ async function sculptOnboard(auth) {
     title: '${split[0]}',
     text: '${split[1]}',
     image: require('assets/images/onboard${k}.png'),
-  },    
-`)
+  },`)
   }
 
   return `
