@@ -20,7 +20,7 @@ function App(): JSX.Element {
 
 export default App; 
 `;
-    await fse.outputFile(path.join(rn_dirs.rn_shared, 'constants', 'env.ts'), code);
+    await fse.outputFile(path.join(rn_dirs.rn_src, 'App.tsx'), code);
 }
 
 async function fileChanges1() {
