@@ -4,6 +4,7 @@ const f = {
     start: require("./bin/start"),
     setup: require("./bin/setup"),
     auth: require('./bin/auth'),
+    secrets: require('./bin/secrets'),
 }
 
 const argv = require('minimist')(process.argv.slice(2));
