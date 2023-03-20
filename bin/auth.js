@@ -3,7 +3,7 @@ const path = require("path");
 const fse = require("fs-extra");
 const {forEach} = require("lodash");
 
-async function sculptImports(auth) {
+function sculptImports(auth) {
   let onboard = '';
   if(auth.onboard) {
     onboard = ', createOnboardScreen';
@@ -20,18 +20,22 @@ import {createRootScreen, createMobileScreen, createOtpScreen${onboard}} from '@
 async function sculptRoot(auth) {
   await downloadFile(auth.root.logo, path.join(rn_dirs.rn_images, 'logofull.png'));
 
-  let list = '';
+  const list = [];
 
-  forEach(auth.root.image, async (v, k) => {
-    await downloadFile(v, path.join(rn_dirs.rn_images, k + `root${k}.jpg`));
-    list += `        require('assets/images/root${0}.jpg'),
-    `
-  });
+  for(let k = 0; k < auth.root.image.length; k++) {
+    const v = auth.root.image[k];
+    await downloadFile(v, path.join(rn_dirs.rn_images, `root${k}.jpg`));
+    list.push(`    require('assets/images/root${k}.jpg'),
+`)
+  }
+
+  console.log("======================================");
+  console.log(list);
 
   return `
 const RootScreen = createRootScreen({
   image: [
-${list}],
+${list.join('')}  ],
   logo: require('assets/images/logofull.png'),
   line1: '${auth.root.line1}',
   line2: '${auth.root.line2}',
@@ -40,17 +44,17 @@ ${list}],
 `;
 }
 
-async function sculptMobile(auth) {
+function sculptMobile(auth) {
   return `
 const MobileScreen = createMobileScreen({
-  countries: ${auth.mobile.countries},
+  countries: ${JSON.stringify(auth.mobile.countries)},
   social: ${auth.mobile.social},
 });
 
 `;
 }
 
-async function sculptOtp(auth) {
+function sculptOtp(auth) {
   return `
 const OtpScreen = createOtpScreen({
   digits: ${auth.otp.digits},
@@ -63,31 +67,32 @@ async function sculptOnboard(auth) {
   if(!auth.onboard) {
     return;
   }
-  let input = '';
-  forEach(auth.onboard.slides, async (v, k) => {
+  const list = [];
+
+  for(let k = 0; k < auth.onboard.slides.length; k++) {
+    const v = auth.onboard.slides[k];
     const split = v.split('|');
-    await downloadFile(split[2], path.join(rn_dirs.rn_images, k + `onboard${k}.png`));
-    input += `
+    await downloadFile(split[2], path.join(rn_dirs.rn_images, `onboard${k}.png`));
+    list.push(`
   {
     title: '${split[0]}',
     text: '${split[1]}',
     image: require('assets/images/onboard${k}.png'),
   },    
-`;
-  });
+`)
+  }
 
   return `
-const OnboardScreen = createOnboardScreen([${input}]);
+const OnboardScreen = createOnboardScreen([${list.join('')}]);
 
 `;
 }
 
-async function sculptAuth(auth) {
+function sculptAuth(auth) {
   let onboard = '';
   if(auth.onboard) {
     onboard = `
-          <Stack.Screen name="RootScreen" component={OnboardScreen} />
-    `;
+          <Stack.Screen name="OnboardScreen" component={OnboardScreen} />`;
   }
 
   return `
@@ -120,14 +125,14 @@ export default AuthScreen;
 
 async function fileChanges(auth) {
   const imports = sculptImports(auth);
-  const root = sculptRoot(auth);
+  const root = await sculptRoot(auth);
   const mobile = sculptMobile(auth);
   const otp = sculptOtp(auth);
-  const onboard = sculptOnboard(auth);
+  const onboard = await sculptOnboard(auth);
   const ath = sculptAuth(auth);
 
   const code = `${imports}${root}${mobile}${otp}${onboard}${ath}`;
-  await fse.outputFile(path.join(rn_dirs.rn_screens, 'RootNavigator.tsx'), code);
+  await fse.outputFile(path.join(rn_dirs.rn_screens, 'AuthScreen.tsx'), code);
 }
 
 async function auth() {
