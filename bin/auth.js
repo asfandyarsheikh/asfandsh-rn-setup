@@ -8,8 +8,7 @@ function sculptImports(auth) {
   if(auth.onboard) {
     onboard = ', createOnboardScreen';
   }
-  return `
-import React from 'react';
+  return `import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthOnly} from '@tisf/rn-providers';
 import {createRootScreen, createMobileScreen, createOtpScreen${onboard}} from '@tisf/rn-screens';
