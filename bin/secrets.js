@@ -19,4 +19,4 @@ async function secrets() {
     await fileChanges1();
 }
 
-module.exports = start;
+module.exports = secrets;
