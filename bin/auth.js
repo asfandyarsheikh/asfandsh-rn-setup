@@ -25,7 +25,7 @@ async function sculptRoot(auth) {
   for(let k = 0; k < auth.root.image.length; k++) {
     const v = auth.root.image[k];
     await downloadFile(v, path.join(rn_dirs.rn_images, `root${k}.jpg`));
-    list.push(`    require('assets/images/root${k}.jpg'),
+    list.push(`    require('../../assets/images/root${k}.jpg'),
 `)
   }
 
@@ -36,7 +36,7 @@ async function sculptRoot(auth) {
 const RootScreen = createRootScreen({
   image: [
 ${list.join('')}  ],
-  logo: require('assets/images/logofull.png'),
+  logo: require('../../assets/images/logofull.png'),
   line1: '${auth.root.line1}',
   line2: '${auth.root.line2}',
 });
@@ -77,7 +77,7 @@ async function sculptOnboard(auth) {
   {
     title: '${split[0]}',
     text: '${split[1]}',
-    image: require('assets/images/onboard${k}.png'),
+    image: require('../../assets/images/onboard${k}.png'),
   },`)
   }
 
