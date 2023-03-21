@@ -17,6 +17,7 @@ import {createRootScreen, createMobileScreen, createOtpScreen${onboard}} from '@
 }
 
 async function sculptRoot(auth) {
+  const onboard = auth.onboard ? 'true' : 'false'
   await downloadFile(auth.root.logo, path.join(rn_dirs.rn_images, 'logofull.png'));
 
   const list = [];
@@ -38,6 +39,7 @@ ${list.join('')}  ],
   logo: require('../../assets/images/logofull.png'),
   line1: '${auth.root.line1}',
   line2: '${auth.root.line2}',
+  onboard: ${onboard},
 });
 
 `;
