@@ -5,7 +5,7 @@ const {forEach} = require("lodash");
 
 function sculptImports(auth) {
   let onboard = '';
-  if(auth.onboard) {
+  if(auth.onboard && !auth.peak) {
     onboard = ', createOnboardScreen';
   }
   return `import React from 'react';
@@ -18,6 +18,7 @@ import {createRootScreen, createMobileScreen, createOtpScreen${onboard}} from '@
 
 async function sculptRoot(auth) {
   const onboard = auth.onboard ? 'true' : 'false'
+  const peak = auth.peak ? 'true' : 'false'
   await downloadFile(auth.root.logo, path.join(rn_dirs.rn_images, 'logofull.png'));
 
   const list = [];
@@ -40,6 +41,7 @@ ${list.join('')}  ],
   line1: '${auth.root.line1}',
   line2: '${auth.root.line2}',
   onboard: ${onboard},
+  peak: ${peak},
 });
 
 `;
@@ -65,7 +67,7 @@ const OtpScreen = createOtpScreen({
 }
 
 async function sculptOnboard(auth) {
-  if(!auth.onboard) {
+  if(!auth.onboard || auth.peak) {
     return;
   }
   const list = [];
@@ -90,7 +92,7 @@ const OnboardScreen = createOnboardScreen([${list.join('')}]);
 
 function sculptAuth(auth) {
   let onboard = '';
-  if(auth.onboard) {
+  if(auth.onboard && !auth.peak) {
     onboard = `
           <Stack.Screen name="OnboardScreen" component={OnboardScreen} />`;
   }
